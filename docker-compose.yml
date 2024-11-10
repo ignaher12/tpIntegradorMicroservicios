@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  estudiantes:
+    image: 'docker-spring-boot-mysql:latest'
+    build:
+      context: ./estudiantes
+    container_name: estudiantes
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:4003/estudiantes_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "4000:4000"
+    networks:
+      - my-network
+
+  inscripciones:
+    image: 'docker-spring-boot-mysql:latest'
+    build:
+      context: ./inscripciones
+    container_name: inscripciones
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:4003/inscripciones_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "4001:4001"
+    networks:
+      - my-network
+
+  db:
+    image: mysql:8
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=central_db
+    ports:
+      - "4003:4003"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
