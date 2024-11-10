@@ -18,14 +18,16 @@ public class JPAEstudianteDAO implements EstudianteDAO {
     }
 
     // Dar de alta un estudiante
-    public void addEstudiante(Estudiante estudiante) {
+    public Estudiante addEstudiante(Estudiante estudiante) {
         try {
             estudiante.setCiudadResidencia(estudiante.getCiudadResidencia().toLowerCase());
             entityManager.getTransaction().begin();
             entityManager.persist(estudiante);
             entityManager.getTransaction().commit();
+            return estudiante;
         } catch (Exception e) {
             System.out.println("Error al agregar estudiante:" + e);
+            return null;
         }
     }
 
@@ -40,13 +42,15 @@ public class JPAEstudianteDAO implements EstudianteDAO {
         }
     }
 
-    public void updateEstudiante(Estudiante estudiante) {
+    public Estudiante updateEstudiante(Estudiante estudiante) {
         try {
             entityManager.getTransaction().begin();
             entityManager.merge(estudiante);
             entityManager.getTransaction().commit();
+            return estudiante;
         } catch (Exception e) {
             System.out.println("Error al eliminar estudiante:" + e);
+            return null;
         }
     }
 
