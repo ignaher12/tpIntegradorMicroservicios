@@ -1,8 +1,10 @@
 package com.example.InscripcionService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,10 +13,11 @@ import org.springframework.web.client.RestTemplate;
 import com.example.DAOFactory.CarreraDAO;
 import com.example.DAOFactory.DAOFactory;
 import com.example.DAOFactory.InscripcionDAO;
+import com.example.DTO.ReporteCarrera;
 import com.example.Entities.Carrera;
 import com.example.Entities.Estudiante;
 import com.example.Entities.Inscripcion;
-
+import com.example.Services.ReporteService;
 
 @SpringBootApplication
 @RestController
@@ -52,4 +55,14 @@ public class InscripcionServiceApplication {
 
         return "Estudiante inscrito en la carrera " + inscripcion;
     }
+	@GetMapping("/reportes")
+	public String getReporte(){
+		List<ReporteCarrera> reportes = ReporteService.generarReporte(carreraDAO, inscripcionDAO);
+		
+		StringBuilder ret = new StringBuilder();
+		for (ReporteCarrera reporteCarrera : reportes) {
+			ret.append(reporteCarrera.printReporte()).append("\n");
+        }
+		return ret.toString();
+	}
 }
