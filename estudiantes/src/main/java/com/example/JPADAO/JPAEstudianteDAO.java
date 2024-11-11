@@ -1,19 +1,17 @@
 package com.example.JPADAO;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.example.DAOFactory.EstudianteDAO;
 import com.example.Entities.Estudiante;
 import com.example.SearchStrategy.EstudianteSearchStrategy;
 import com.example.SortStrategy.EstudianteSortStrategy;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
 public class JPAEstudianteDAO implements EstudianteDAO {
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
 
     public JPAEstudianteDAO(EntityManager entityManager) {
@@ -23,11 +21,14 @@ public class JPAEstudianteDAO implements EstudianteDAO {
     // Dar de alta un estudiante
     public Estudiante addEstudiante(Estudiante estudiante) {
         try {
-            estudiante.setCiudadResidencia(estudiante.getCiudadResidencia().toLowerCase());
-            entityManager.getTransaction().begin();
-            entityManager.persist(estudiante);
-            entityManager.getTransaction().commit();
-            return estudiante;
+            if(entityManager != null){
+                estudiante.setCiudadResidencia(estudiante.getCiudadResidencia().toLowerCase());
+                entityManager.getTransaction().begin();
+                entityManager.persist(estudiante);
+                entityManager.getTransaction().commit();
+                return estudiante;
+            }
+            return null;
         } catch (Exception e) {
             System.out.println("Error al agregar estudiante:" + e);
             if (entityManager.getTransaction().isActive()) {

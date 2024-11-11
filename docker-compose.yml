@@ -17,6 +17,7 @@ services:
     build:
       context: ./estudiantes
     container_name: estudiantes
+    restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: root
     depends_on:
@@ -28,6 +29,7 @@ services:
     build:
       context: ./inscripciones
     container_name: inscripciones
+    restart: on-failure
     depends_on:
       - db
     ports:

@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class JPAInscripcionDAO implements InscripcionDAO{
-    @Autowired
     private EntityManager entityManager;
 
     public JPAInscripcionDAO(EntityManager entityManager) {

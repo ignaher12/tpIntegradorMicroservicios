@@ -11,7 +11,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 public class JPACarreraDAO implements CarreraDAO {
-    @Autowired
     private EntityManager entityManager;
     
     public JPACarreraDAO(EntityManager entityManager){

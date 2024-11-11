@@ -29,12 +29,13 @@ import com.example.SortStrategy.EstudianteSortStrategy.EstudianteCriterio;
 @RestController
 public class EstudianteServiceApplication {
 
-	private static DAOFactory jpaDAOFactory = DAOFactory.getDAOFactory(1);
+	private static DAOFactory jpaDAOFactory;
 	private static EstudianteDAO estudianteDAO;
 
 	public static void main(String[] args) {
-		estudianteDAO = jpaDAOFactory.getEstudianteDAO();
+		jpaDAOFactory = DAOFactory.getDAOFactory(1);
 		jpaDAOFactory.createConnection("UnidadDePersistencia");
+		estudianteDAO = jpaDAOFactory.getEstudianteDAO();
 		SpringApplication.run(EstudianteServiceApplication.class, args);
 
 	}
