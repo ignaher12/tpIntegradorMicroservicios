@@ -1,16 +1,19 @@
-package com.example.EstudianteService.JPADAO;
+package com.example.JPADAO;
 
 import java.util.List;
 
-import com.example.EstudianteService.DAOFactory.EstudianteDAO;
-import com.example.EstudianteService.Entities.Estudiante;
-import com.example.EstudianteService.SearchStrategy.EstudianteSearchStrategy;
-import com.example.EstudianteService.SortStrategy.EstudianteSortStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.DAOFactory.EstudianteDAO;
+import com.example.Entities.Estudiante;
+import com.example.SearchStrategy.EstudianteSearchStrategy;
+import com.example.SortStrategy.EstudianteSortStrategy;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 public class JPAEstudianteDAO implements EstudianteDAO {
+    @Autowired
     private EntityManager entityManager;
 
     public JPAEstudianteDAO(EntityManager entityManager) {
@@ -27,6 +30,9 @@ public class JPAEstudianteDAO implements EstudianteDAO {
             return estudiante;
         } catch (Exception e) {
             System.out.println("Error al agregar estudiante:" + e);
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();  // Rollback the transaction if there's an error
+            }
             return null;
         }
     }
@@ -39,6 +45,9 @@ public class JPAEstudianteDAO implements EstudianteDAO {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             System.out.println("Error al eliminar estudiante:" + e);
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();  // Rollback the transaction if there's an error
+            }
         }
     }
 
@@ -50,6 +59,9 @@ public class JPAEstudianteDAO implements EstudianteDAO {
             return estudiante;
         } catch (Exception e) {
             System.out.println("Error al eliminar estudiante:" + e);
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();  // Rollback the transaction if there's an error
+            }
             return null;
         }
     }
@@ -72,9 +84,14 @@ public class JPAEstudianteDAO implements EstudianteDAO {
 
 
     public Estudiante getEstudianteByNumeroDocumento(long numeroDeDocumento) {
-        return entityManager.find(Estudiante.class, numeroDeDocumento);
+        String jpql = "SELECT e FROM Estudiante e WHERE e.numeroDeDocumento = :numeroDeDocumento";
+        return entityManager.createQuery(jpql, Estudiante.class)
+                            .setParameter("numeroDeDocumento", numeroDeDocumento)
+                            .setMaxResults(1)
+                            .getSingleResult();
     }
 
+    @Override
     public List<Estudiante> findEstudiantes(EstudianteSearchStrategy busqueda) {
         String alias = "e";
         String jpql= "SELECT " + alias + " FROM Estudiante " + alias + " WHERE " + busqueda.buildSearchQuery(alias);
@@ -83,7 +100,8 @@ public class JPAEstudianteDAO implements EstudianteDAO {
 
         return query.getResultList();
     }
-
+    
+    @Override
     public List<Estudiante> findEstudiantes(EstudianteSearchStrategy strategy1, EstudianteSearchStrategy strategy2){
         String alias = "e";
         String jpql = "SELECT "+ alias +" FROM Estudiante "+ alias +" " +
@@ -94,6 +112,8 @@ public class JPAEstudianteDAO implements EstudianteDAO {
 
         return query.getResultList();
     }
+
+
 }
 
 

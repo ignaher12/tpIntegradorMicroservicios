@@ -1,8 +1,8 @@
-package com.example.EstudianteService.DAOFactory;
+package com.example.DAOFactory;
 
-import com.example.EstudianteService.Entities.Estudiante;
-import com.example.EstudianteService.SearchStrategy.EstudianteSearchStrategy;
-import com.example.EstudianteService.SortStrategy.EstudianteSortStrategy;
+import com.example.Entities.Estudiante;
+import com.example.SearchStrategy.EstudianteSearchStrategy;
+import com.example.SortStrategy.EstudianteSortStrategy;
 
 import java.util.List;
 

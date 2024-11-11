@@ -1,7 +1,7 @@
-package com.example.EstudianteService.JPADAO;
+package com.example.JPADAO;
 
-import com.example.EstudianteService.DAOFactory.DAOFactory;
-import com.example.EstudianteService.DAOFactory.EstudianteDAO;
+import com.example.DAOFactory.DAOFactory;
+import com.example.DAOFactory.EstudianteDAO;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

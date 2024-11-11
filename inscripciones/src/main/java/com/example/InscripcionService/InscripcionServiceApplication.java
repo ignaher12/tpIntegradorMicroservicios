@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,44 +35,57 @@ public class InscripcionServiceApplication {
 	private static InscripcionDAO inscripcionDAO;
     private static CarreraDAO carreraDAO;
 
-	@Autowired
-    private RestTemplate restTemplate;
-	private static final String ESTUDIANTES_SERVICE_URL = "http://localhost:4000/";
+    private RestTemplate restTemplate = new RestTemplate();
+	private static final String ESTUDIANTES_SERVICE_URL = "http://estudiantes:4004/";
 
 
 	public static void main(String[] args) {
+		jpaDAOFactory.createConnection("UnidadDePersistencia");
 		inscripcionDAO = jpaDAOFactory.getInscripcionDAO();
         carreraDAO= jpaDAOFactory.getCarreraDAO();
 		SpringApplication.run(InscripcionServiceApplication.class, args);
 	}
 	
-	@PostMapping("/{estudianteId}/inscribir/{carreraId}")
-    public String inscribirEstudianteEnCarrera(@PathVariable Long estudianteId, @PathVariable int carreraId) {
-        // Hacer la solicitud GET al microservicio de Estudiantes
-        Estudiante estudiante = restTemplate.getForObject(ESTUDIANTES_SERVICE_URL + estudianteId, Estudiante.class);
+	@PostMapping("/inscribir")
+    public String inscribirEstudianteEnCarrera(@RequestParam(value = "estudianteId", defaultValue = "" ) Long estudianteId, @RequestParam(value = "carreraId", defaultValue = "" ) int carreraId) {
         
-        if (estudiante == null) {
-            return "Estudiante no encontrado";
-        }
-
 		Carrera carrera = carreraDAO.getCarrera(carreraId);		//SE DEBERIA HACER UN LLAMADO AL MICROSERVICIO DE CARRERA
 		if (carrera == null) {
             return "Carrera no encontrado";
         }
 
-		Inscripcion inscripcion = new Inscripcion(estudiante, carrera, false);
+		// Hacer la solicitud GET al microservicio de Estudiantes
+		ResponseEntity<Estudiante> estudiante = restTemplate.getForEntity(ESTUDIANTES_SERVICE_URL + "/estudiante/libreta?libreta=" + estudianteId, Estudiante.class);
+        // Check if the response body contains any students
+		// Estudiante[] estudiantes = response.getBody();
+		// if (estudiantes == null || estudiantes.length == 0) {
+		// 	return "Estudiante no encontrado";
+		// }
+		// You can either return the first Estudiante or handle as needed
+		//Estudiante estudiante = estudiantes[0];
+        if (estudiante.getBody() == null) {
+            return "Estudiante no encontrado";
+        }else{
+			System.out.println(estudiante.getBody());
+		}
+
+		
+
+		Inscripcion inscripcion = new Inscripcion(estudiante.getBody(), carrera, false);
+		System.out.println(inscripcion);
 		inscripcionDAO.addInscripcion(inscripcion);
 
         return "Estudiante inscrito en la carrera " + inscripcion;
     }
 	// Endpoint para eliminar una inscripción
-    @DeleteMapping("/{libretaUniversitaria}/eliminar/{carreraId}")
-    public String eliminarInscripcion(@PathVariable long libretaUniversitaria, @PathVariable int carreraId) {
+    @DeleteMapping("/eliminar")
+    public String eliminarInscripcion(@RequestParam(value = "libretaUniversitaria", defaultValue = "" ) Long libretaUniversitaria, @RequestParam(value = "carreraId", defaultValue = "" ) int carreraId) {
         try {
+			System.out.println(libretaUniversitaria + " " + carreraId);
 			inscripcionDAO.deleteInscripcion(libretaUniversitaria, carreraId);
 			return "Inscripción eliminada para el estudiante con libreta universitaria " + libretaUniversitaria + " en la carrera " + carreraId;
 		} catch (Exception e) {
-			return "error";
+			return "error" + e;
 		}
 	}
 
@@ -78,10 +93,11 @@ public class InscripcionServiceApplication {
     @PutMapping("/actualizar")
     public String actualizarInscripcion(@RequestBody Inscripcion inscripcion) {
         try {
+			System.out.println(inscripcion + "SERVICE APLICATION");
 			inscripcionDAO.updateInscripcion(inscripcion);
         	return "Inscripción actualizada: " + inscripcion;
 		} catch (Exception e) {
-			return "error";
+			return "error" + e;
 		}
     }
 

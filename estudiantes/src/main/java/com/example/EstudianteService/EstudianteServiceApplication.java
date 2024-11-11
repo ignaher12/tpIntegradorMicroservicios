@@ -8,36 +8,33 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.PutExchange;
 
-import com.example.EstudianteService.DAOFactory.DAOFactory;
-import com.example.EstudianteService.DAOFactory.EstudianteDAO;
-import com.example.EstudianteService.Entities.Estudiante;
-import com.example.EstudianteService.SearchStrategy.EstudianteSearchByCarrera;
-import com.example.EstudianteService.SearchStrategy.EstudianteSearchByCiudad;
-import com.example.EstudianteService.SearchStrategy.EstudianteSearchByGenero;
-import com.example.EstudianteService.SearchStrategy.EstudianteSearchStrategy;
-import com.example.EstudianteService.SortStrategy.EstudianteSortStrategy;
-import com.example.EstudianteService.SortStrategy.EstudianteSortStrategy.EstudianteCriterio;
+import com.example.DAOFactory.DAOFactory;
+import com.example.DAOFactory.EstudianteDAO;
+import com.example.Entities.Estudiante;
+import com.example.SearchStrategy.EstudianteSearchByCarrera;
+import com.example.SearchStrategy.EstudianteSearchByCiudad;
+import com.example.SearchStrategy.EstudianteSearchByGenero;
+import com.example.SearchStrategy.EstudianteSearchStrategy;
+import com.example.SortStrategy.EstudianteSortStrategy;
+import com.example.SortStrategy.EstudianteSortStrategy.EstudianteCriterio;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 
 @SpringBootApplication
 @RestController
 public class EstudianteServiceApplication {
-	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("UnidadDePersistencia");
-	private static EntityManager em = emf.createEntityManager();
+
 	private static DAOFactory jpaDAOFactory = DAOFactory.getDAOFactory(1);
 	private static EstudianteDAO estudianteDAO;
 
 	public static void main(String[] args) {
-		jpaDAOFactory.createConnection("UnidadDePersistencia");
 		estudianteDAO = jpaDAOFactory.getEstudianteDAO();
+		jpaDAOFactory.createConnection("UnidadDePersistencia");
 		SpringApplication.run(EstudianteServiceApplication.class, args);
 
 	}
@@ -47,7 +44,7 @@ public class EstudianteServiceApplication {
     }
 
 	@PostMapping("/estudiante")
-	public Estudiante agregarEstudiante(@RequestParam(value = "estudiante", defaultValue = "null" ) Estudiante estudiante){
+	public Estudiante agregarEstudiante(@RequestBody Estudiante estudiante){
 		return estudianteDAO.addEstudiante(estudiante);
 	}
 	
@@ -57,7 +54,7 @@ public class EstudianteServiceApplication {
 	}
 
 	@PutMapping("/estudiante")
-	public Estudiante actualizarEstudiante(@RequestParam(value = "estudiante", defaultValue = "null") Estudiante estudiante){
+	public Estudiante actualizarEstudiante(@RequestBody Estudiante estudiante){
 		return estudianteDAO.updateEstudiante(estudiante);
 	}
 
@@ -71,12 +68,12 @@ public class EstudianteServiceApplication {
 		}
 	}
 
-	@GetMapping("/estudiante")
+	@GetMapping("/estudiante/libreta")
 	public Estudiante recuperarEstudianteLibreta(@RequestParam(value = "libreta", defaultValue = "0" ) long libreta){
 		return estudianteDAO.getEstudianteByLibreta(libreta);
 	}
 
-	@GetMapping("/estudiante")
+	@GetMapping("/estudiante/documento")
 	public Estudiante recuperarEstudianteDocumento(@RequestParam(value = "documento", defaultValue = "0" ) long documento){
 		return estudianteDAO.getEstudianteByNumeroDocumento(documento);
 	}

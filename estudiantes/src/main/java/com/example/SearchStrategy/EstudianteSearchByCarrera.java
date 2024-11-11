@@ -1,4 +1,4 @@
-package com.example.EstudianteService.SearchStrategy;
+package com.example.SearchStrategy;
 
 public class EstudianteSearchByCarrera implements EstudianteSearchStrategy{
     int idCarrera;

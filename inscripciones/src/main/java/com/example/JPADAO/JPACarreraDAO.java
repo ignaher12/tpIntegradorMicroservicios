@@ -1,6 +1,8 @@
 package com.example.JPADAO;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.example.DAOFactory.CarreraDAO;
 import com.example.Entities.Carrera;
 
@@ -9,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 public class JPACarreraDAO implements CarreraDAO {
+    @Autowired
     private EntityManager entityManager;
     
     public JPACarreraDAO(EntityManager entityManager){

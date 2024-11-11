@@ -57,6 +57,6 @@ public class Inscripcion {
     }
 
     public String toString(){
-        return "[ Estudiante: " +  estudiante.getNumeroDeDocumento() + " - Carrera: " + carrera.getNombreCarrera() + " ]";
+        return "[ Estudiante: " +  estudiante.getNumeroDeDocumento() + " - Carrera: " + carrera.getNombreCarrera() + " - Graduado: " + this.graduado  + " - Fecha: " + this.fecha_inscripcion +  " ]";
     }
 }

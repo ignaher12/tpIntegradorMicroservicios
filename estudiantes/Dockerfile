@@ -9,7 +9,7 @@ WORKDIR /app
 COPY target/EstudianteService-0.0.1-SNAPSHOT.jar app.jar
 
 # Expone el puerto en el que el microservicio escucha (4000 para estudiantes y 4001 para inscripciones)
-EXPOSE 4000 
+EXPOSE 4004 
 
 # Ejecuta el microservicio
 ENTRYPOINT ["java", "-jar", "app.jar"]

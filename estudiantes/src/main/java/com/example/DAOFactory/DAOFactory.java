@@ -1,6 +1,6 @@
-package com.example.EstudianteService.DAOFactory;
+package com.example.DAOFactory;
 
-import com.example.EstudianteService.JPADAO.JPADAOFactory;
+import com.example.JPADAO.JPADAOFactory;
 
 public abstract class DAOFactory {
     public static final int MYSQL_JDBC = 1;

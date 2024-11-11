@@ -1,7 +1,7 @@
-package com.example.EstudianteService.SearchStrategy;
+package com.example.SearchStrategy;
 
-import com.example.EstudianteService.Entities.Estudiante;
-import com.example.EstudianteService.Entities.Estudiante.Genero;
+import com.example.Entities.Estudiante;
+import com.example.Entities.Estudiante.Genero;
 
 public class EstudianteSearchByGenero implements EstudianteSearchStrategy{
     private Estudiante.Genero genero; 

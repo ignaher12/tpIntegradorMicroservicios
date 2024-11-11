@@ -1,4 +1,4 @@
-package com.example.EstudianteService.SortStrategy;
+package com.example.SortStrategy;
 
 public class EstudianteSortStrategy {
     EstudianteCriterio criterio;
