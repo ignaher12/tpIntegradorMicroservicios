@@ -12,6 +12,8 @@ services:
       - MYSQL_DATABASE=central_db
     ports:
       - "4003:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   estudiantes:
     build:

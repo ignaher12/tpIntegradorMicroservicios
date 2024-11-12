@@ -39,14 +39,18 @@ public class EstudianteServiceApplication {
 		SpringApplication.run(EstudianteServiceApplication.class, args);
 
 	}
-	@GetMapping("/hello")
-    public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-      return String.format("Hello %s!", name);
+	@GetMapping("/")
+    public String hello() {
+      return String.format("Servicio activo");
     }
 
 	@PostMapping("/estudiante")
 	public Estudiante agregarEstudiante(@RequestBody Estudiante estudiante){
-		return estudianteDAO.addEstudiante(estudiante);
+		try {
+			return estudianteDAO.addEstudiante(estudiante);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	@GetMapping("/estudiante")

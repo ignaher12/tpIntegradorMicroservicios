@@ -75,11 +75,11 @@ public class InscripcionServiceApplication {
 		System.out.println(inscripcion);
 		inscripcionDAO.addInscripcion(inscripcion);
 
-        return "Estudiante inscrito en la carrera " + inscripcion;
+        return "Estudiante inscripto en la carrera " + inscripcion;
     }
 	// Endpoint para eliminar una inscripción
     @DeleteMapping("/eliminar")
-    public String eliminarInscripcion(@RequestParam(value = "libretaUniversitaria", defaultValue = "" ) Long libretaUniversitaria, @RequestParam(value = "carreraId", defaultValue = "" ) int carreraId) {
+    public String eliminarInscripcion(@RequestParam(value = "estudianteId", defaultValue = "" ) Long libretaUniversitaria, @RequestParam(value = "carreraId", defaultValue = "" ) int carreraId) {
         try {
 			System.out.println(libretaUniversitaria + " " + carreraId);
 			inscripcionDAO.deleteInscripcion(libretaUniversitaria, carreraId);

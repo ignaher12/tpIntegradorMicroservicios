@@ -18,9 +18,10 @@ import com.example.Entities.Estudiante;
 
 
 public class ReporteService {
-    private static List<ReporteCarrera> reportes = new ArrayList<ReporteCarrera>();
+    private static List<ReporteCarrera> reportes;
 
     public static List<ReporteCarrera> generarReporte(CarreraDAO carreraDAO, InscripcionDAO inscripcionDAO) {
+        reportes = new ArrayList<ReporteCarrera>();
         CarreraSortStrategy strategySortCarrera = new CarreraSortStrategy(CarreraCriterio.NOMBRE_CARRERA);
 
         //sort de carreras por nombre

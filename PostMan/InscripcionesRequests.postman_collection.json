@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "3e8556f0-be61-49ed-9b6f-b1d1768d56fd",
+		"name": "InscripcionesRequests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29394427"
+	},
+	"item": [
+		{
+			"name": "inscribirEstudiante",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4005/inscribir?estudianteId=1&carreraId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4005",
+					"path": [
+						"inscribir"
+					],
+					"query": [
+						{
+							"key": "estudianteId",
+							"value": "1"
+						},
+						{
+							"key": "carreraId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteInscripcion",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4005/eliminar?estudianteId=1&carreraId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4005",
+					"path": [
+						"eliminar"
+					],
+					"query": [
+						{
+							"key": "estudianteId",
+							"value": "1"
+						},
+						{
+							"key": "carreraId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "actualizarInscripcion",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"estudiante\": {\r\n        \"libretaUniversitaria\": 1,\r\n        \"numeroDeDocumento\": 1223,\r\n        \"nombre\": \"Santiago\",\r\n        \"apellido\": \"Castano\",\r\n        \"edad\": 30,\r\n        \"genero\": \"masculino\",\r\n        \"ciudadResidencia\": \"tandil\"\r\n    },\r\n    \"carrera\": {\r\n        \"carreraId\": 1,\r\n        \"nombreCarrera\": \"Psicologa\",\r\n        \"fechaCreacion\": \"2023-09-05T16:10:00\"\r\n    },\r\n    \"graduado\": false,\r\n    \"fecha_inscripcion\": \"2024-11-12T04:24:51.31385058\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4005/actualizar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4005",
+					"path": [
+						"actualizar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getInscripcionID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4005/1/obtener/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4005",
+					"path": [
+						"1",
+						"obtener",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getInscripcionXFiltro",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4005/buscar?filtro=1&orden=FECHA_INSCRIPCION",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4005",
+					"path": [
+						"buscar"
+					],
+					"query": [
+						{
+							"key": "filtro",
+							"value": "1"
+						},
+						{
+							"key": "orden",
+							"value": "FECHA_INSCRIPCION"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getReportes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4005/reportes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4005",
+					"path": [
+						"reportes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
