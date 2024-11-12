@@ -1,22 +1,27 @@
 package com.example.SearchStrategy;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EstudianteSearchByCarrera implements EstudianteSearchStrategy{
-    int idCarrera;
+    List<Long> carreras;
 
-    public EstudianteSearchByCarrera(int idCarrera) {
-        this.idCarrera = idCarrera;
+    public EstudianteSearchByCarrera(List<Long> carreras) {
+        this.carreras = carreras;
     }
 
     @Override
     public String buildSearchQuery(String alias) {
-        return alias + ".libretaUniversitaria IN (SELECT i.estudiante.libretaUniversitaria FROM Inscripcion i WHERE i.carrera.carreraId = " + idCarrera + ")";
+        String carrerasString = carreras.stream()
+            .map(String::valueOf)
+            .collect(Collectors.joining(", "));
+        return alias + ".libretaUniversitaria IN ("+ carrerasString + ")";
     }
 
-    public int getIdCarrera() {
-        return idCarrera;
+    public List<Long> getCarreras() {
+        return carreras;
     }
 
-    public void setIdCarrera(int idCarrera) {
-        this.idCarrera = idCarrera;
+    public void setIdCarrera(List<Long> carreras) {
+        this.carreras = carreras;
     }
 }

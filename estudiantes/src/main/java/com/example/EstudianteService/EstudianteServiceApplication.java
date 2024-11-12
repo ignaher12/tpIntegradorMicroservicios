@@ -4,6 +4,10 @@ import java.util.List;
 import org.aspectj.lang.annotation.RequiredTypes;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.service.annotation.PutExchange;
 
 import com.example.DAOFactory.DAOFactory;
@@ -31,6 +36,9 @@ public class EstudianteServiceApplication {
 
 	private static DAOFactory jpaDAOFactory;
 	private static EstudianteDAO estudianteDAO;
+
+    private RestTemplate restTemplate = new RestTemplate();
+	private static final String INSCRIPCIONES_SERVICE_URL = "http://inscripciones:4005/";
 
 	public static void main(String[] args) {
 		jpaDAOFactory = DAOFactory.getDAOFactory(1);
@@ -104,9 +112,24 @@ public class EstudianteServiceApplication {
 
 	@GetMapping("estudiante/ciudad_carrera")
 	public List<Estudiante> recuperarEstudianteFiltradoCC(@RequestParam(value = "ciudad", defaultValue = "" ) String ciudad, @RequestParam(value = "carrera", defaultValue = "" ) int carrera){
-		EstudianteSearchByCarrera strategy1 = new EstudianteSearchByCarrera(carrera);
-		EstudianteSearchByCiudad strategy2 = new EstudianteSearchByCiudad(ciudad);
-		return estudianteDAO.findEstudiantes(strategy1, strategy2);
+		ResponseEntity<List<Long>> carrerasResponse = restTemplate.exchange(
+				INSCRIPCIONES_SERVICE_URL + "/obtener/inscripciones?carreraId=" + carrera,
+				HttpMethod.GET,
+				null,
+				new ParameterizedTypeReference<List<Long>>() {}
+		);
+		if (carrerasResponse.getStatusCode() == HttpStatus.OK) {
+			List<Long> carreras = carrerasResponse.getBody();
+			if (carreras != null) {
+				EstudianteSearchByCarrera strategy1 = new EstudianteSearchByCarrera(carreras);
+				EstudianteSearchByCiudad strategy2 = new EstudianteSearchByCiudad(ciudad);
+				return estudianteDAO.findEstudiantes(strategy1, strategy2);
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
 	}
 
 	

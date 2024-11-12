@@ -108,7 +108,6 @@ public class JPAEstudianteDAO implements EstudianteDAO {
         String jpql = "SELECT "+ alias +" FROM Estudiante "+ alias +" " +
                 "WHERE "+ strategy1.buildSearchQuery(alias) +
                 " AND " + strategy2.buildSearchQuery(alias);
-
         TypedQuery<Estudiante> query = entityManager.createQuery(jpql, Estudiante.class);
 
         return query.getResultList();
