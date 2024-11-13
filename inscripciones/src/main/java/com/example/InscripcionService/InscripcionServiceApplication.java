@@ -1,11 +1,9 @@
 package com.example.InscripcionService;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,23 +54,12 @@ public class InscripcionServiceApplication {
 
 		// Hacer la solicitud GET al microservicio de Estudiantes
 		ResponseEntity<Estudiante> estudiante = restTemplate.getForEntity(ESTUDIANTES_SERVICE_URL + "/estudiante/libreta?libreta=" + estudianteId, Estudiante.class);
-        // Check if the response body contains any students
-		// Estudiante[] estudiantes = response.getBody();
-		// if (estudiantes == null || estudiantes.length == 0) {
-		// 	return "Estudiante no encontrado";
-		// }
-		// You can either return the first Estudiante or handle as needed
-		//Estudiante estudiante = estudiantes[0];
         if (estudiante.getBody() == null) {
             return "Estudiante no encontrado";
         }else{
 			System.out.println(estudiante.getBody());
 		}
-
-		
-
 		Inscripcion inscripcion = new Inscripcion(estudiante.getBody(), carrera, false);
-		System.out.println(inscripcion);
 		inscripcionDAO.addInscripcion(inscripcion);
 
         return "Estudiante inscripto en la carrera " + inscripcion;
@@ -81,7 +68,6 @@ public class InscripcionServiceApplication {
     @DeleteMapping("/eliminar")
     public String eliminarInscripcion(@RequestParam(value = "estudianteId", defaultValue = "" ) Long libretaUniversitaria, @RequestParam(value = "carreraId", defaultValue = "" ) int carreraId) {
         try {
-			System.out.println(libretaUniversitaria + " " + carreraId);
 			inscripcionDAO.deleteInscripcion(libretaUniversitaria, carreraId);
 			return "Inscripción eliminada para el estudiante con libreta universitaria " + libretaUniversitaria + " en la carrera " + carreraId;
 		} catch (Exception e) {
@@ -93,7 +79,6 @@ public class InscripcionServiceApplication {
     @PutMapping("/actualizar")
     public String actualizarInscripcion(@RequestBody Inscripcion inscripcion) {
         try {
-			System.out.println(inscripcion + "SERVICE APLICATION");
 			inscripcionDAO.updateInscripcion(inscripcion);
         	return "Inscripción actualizada: " + inscripcion;
 		} catch (Exception e) {
@@ -110,6 +95,17 @@ public class InscripcionServiceApplication {
 			return null;
 		}
     }
+
+	@GetMapping("/obtener/inscripciones")
+	public List<Long> obtenerInscripcionesByCarrera(@RequestParam(name = "carreraId", defaultValue = "-1") int carreraId){
+		try{
+			List<Long> aux = inscripcionDAO.getInscripcionById(carreraId);
+			return aux;
+
+		} catch (Exception e){
+			return null;
+		}
+	}
 
 	// Endpoint para obtener inscripciones con filtros y orden
     @GetMapping("/buscar")

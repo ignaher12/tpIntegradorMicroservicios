@@ -12,5 +12,6 @@ public interface InscripcionDAO {
     public void deleteInscripcion(long libretaUniversitaria, int carreraId);
     public void updateInscripcion(Inscripcion inscripcion);
     public Inscripcion getInscripcion(long libretaUniversitaria, int carreraId);
+    public List<Long> getInscripcionById(int carreraId);
     public List<Inscripcion> getInscripcionByFilterOrdenadas(InscripcionSearchStrategy strategy1, InscripcionSortStrategy strategy2);
 }
