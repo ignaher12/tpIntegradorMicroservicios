@@ -1,16 +1,8 @@
 package com.example.InscripcionService;
 import java.util.List;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,24 +20,20 @@ import com.example.SortStrategy.InscripcionSortStrategy;
 
 @SpringBootApplication
 @RestController
-public class InscripcionServiceApplication {
+public class InscripcionService{
 	private static DAOFactory jpaDAOFactory = DAOFactory.getDAOFactory(1);
 	private static InscripcionDAO inscripcionDAO;
     private static CarreraDAO carreraDAO;
-
     private RestTemplate restTemplate = new RestTemplate();
 	private static final String ESTUDIANTES_SERVICE_URL = "http://estudiantes:4004/";
 
-
-	public static void main(String[] args) {
+	public InscripcionService(){
 		jpaDAOFactory.createConnection("UnidadDePersistencia");
 		inscripcionDAO = jpaDAOFactory.getInscripcionDAO();
-        carreraDAO= jpaDAOFactory.getCarreraDAO();
-		SpringApplication.run(InscripcionServiceApplication.class, args);
+		carreraDAO= jpaDAOFactory.getCarreraDAO();
 	}
 	
-	@PostMapping("/inscribir")
-    public String inscribirEstudianteEnCarrera(@RequestParam(value = "estudianteId", defaultValue = "" ) Long estudianteId, @RequestParam(value = "carreraId", defaultValue = "" ) int carreraId) {
+    public String inscribirEstudianteEnCarrera(Long estudianteId, int carreraId) {
         
 		Carrera carrera = carreraDAO.getCarrera(carreraId);		//SE DEBERIA HACER UN LLAMADO AL MICROSERVICIO DE CARRERA
 		if (carrera == null) {
@@ -65,8 +53,7 @@ public class InscripcionServiceApplication {
         return "Estudiante inscripto en la carrera " + inscripcion;
     }
 	// Endpoint para eliminar una inscripción
-    @DeleteMapping("/eliminar")
-    public String eliminarInscripcion(@RequestParam(value = "estudianteId", defaultValue = "" ) Long libretaUniversitaria, @RequestParam(value = "carreraId", defaultValue = "" ) int carreraId) {
+    public String eliminarInscripcion(Long libretaUniversitaria, int carreraId) {
         try {
 			inscripcionDAO.deleteInscripcion(libretaUniversitaria, carreraId);
 			return "Inscripción eliminada para el estudiante con libreta universitaria " + libretaUniversitaria + " en la carrera " + carreraId;
@@ -76,8 +63,7 @@ public class InscripcionServiceApplication {
 	}
 
     // Endpoint para actualizar una inscripción
-    @PutMapping("/actualizar")
-    public String actualizarInscripcion(@RequestBody Inscripcion inscripcion) {
+    public String actualizarInscripcion(Inscripcion inscripcion) {
         try {
 			inscripcionDAO.updateInscripcion(inscripcion);
         	return "Inscripción actualizada: " + inscripcion;
@@ -87,8 +73,7 @@ public class InscripcionServiceApplication {
     }
 
     // Endpoint para obtener una inscripción específica
-    @GetMapping("/{libretaUniversitaria}/obtener/{carreraId}")
-    public Inscripcion obtenerInscripcion(@PathVariable long libretaUniversitaria, @PathVariable int carreraId) {
+    public Inscripcion obtenerInscripcion(long libretaUniversitaria, int carreraId) {
         try{
 			return inscripcionDAO.getInscripcion(libretaUniversitaria, carreraId);
 		} catch (Exception e) {
@@ -96,8 +81,7 @@ public class InscripcionServiceApplication {
 		}
     }
 
-	@GetMapping("/obtener/inscripciones")
-	public List<Long> obtenerInscripcionesByCarrera(@RequestParam(name = "carreraId", defaultValue = "-1") int carreraId){
+	public List<Long> obtenerInscripcionesByCarrera(int carreraId){
 		try{
 			List<Long> aux = inscripcionDAO.getInscripcionById(carreraId);
 			return aux;
@@ -108,8 +92,7 @@ public class InscripcionServiceApplication {
 	}
 
 	// Endpoint para obtener inscripciones con filtros y orden
-    @GetMapping("/buscar")
-    public String obtenerInscripcionesConFiltroOrdenadas(@RequestParam(name = "filtro", defaultValue = "-1") int filtro, @RequestParam(name = "orden", defaultValue = " ") String orden) {
+    public String obtenerInscripcionesConFiltroOrdenadas(int filtro, String orden) {
 		if ((filtro != -1) && (orden != " ")){
 			try {
 				// Crear instancia de InscripcionSearchStrategy basada en el filtro recibido
@@ -130,7 +113,6 @@ public class InscripcionServiceApplication {
 		return "Faltaron los filtro y/o ordenamiento";
     }
 
-	@GetMapping("/reportes")
 	public String getReporte(){
 		List<ReporteCarrera> reportes = ReporteService.generarReporte(carreraDAO, inscripcionDAO);
 		
